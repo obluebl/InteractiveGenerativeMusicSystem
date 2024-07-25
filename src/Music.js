@@ -70,7 +70,7 @@ class Music{
     }
 
     loadSeawindSound() {
-        let filepath = `../assets/sound/naturalSound/seawind.wav`;
+        let filepath = `../assets/sound/naturalSound/seawind.mp3`;
         this.seawindSound = loadSound(filepath, () => {
             console.log("seawind sound loaded");
         }, (err) => {
