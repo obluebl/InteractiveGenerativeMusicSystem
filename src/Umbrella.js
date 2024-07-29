@@ -73,6 +73,12 @@ class Umbrella{
         this.physics.updatePosition(this.body, newX, newY);
     }
 
+    updateSize(width, height)
+    {
+        this.width = width;
+        this.height = height;
+    }
+
     adjustSemitone()
     {
         if(this.noteIndex==0 || this.noteIndex==5)

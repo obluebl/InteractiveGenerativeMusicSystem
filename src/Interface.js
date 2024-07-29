@@ -24,7 +24,7 @@ class Interface{
                 let ranShiftY = random(-randomness, randomness);
             
             
-                let drops = map(rainIntensity, 0.5*baseRainIntensity, 2*baseRainIntensity, 0, 250, true); 
+                let drops = map(rainIntensity, 0.5*baseRainIntensity, 2*baseRainIntensity, 0, 150, true); 
                 
                 for(let i = 0; i < drops; i++){
                     let randomColor = random(this.palette);

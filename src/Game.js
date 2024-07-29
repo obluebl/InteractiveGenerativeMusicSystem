@@ -18,6 +18,9 @@ let cloudDragged = false;
 let cloudOffsetX;
 let cloudOffsetY;
 let isGeneratingRainDrops = true; 
+let helpButton;
+let showHelp = false;  
+let helpBoxX, helpBoxY, helpBoxWidth, helpBoxHeight;
 
 function preload() {
     music.loadPianoNotes();
@@ -28,7 +31,7 @@ function preload() {
 }
 
 function setup() {
-    console.log('窗体高度为'+windowWidth);
+    console.log('窗体高度为'+windowHeight);
     createCanvas(windowWidth, windowHeight);
     noStroke();
 
@@ -46,6 +49,24 @@ function setup() {
     frequencyLabel.position(rainFrequencySlider.x, rainFrequencySlider.y + 20);
     let speedLable = createP('Wind Speed');
     speedLable.position(cloudSpeedSlider.x, cloudSpeedSlider.y + 20);
+
+    helpBoxWidth = 465;
+    helpBoxHeight = 300;
+    helpBoxX = width - helpBoxWidth;
+    helpBoxY = 200;
+
+    helpButton = createButton('Help');
+    helpButton.position(width - 60, 10);
+    helpButton.style('background-color', 'white'); 
+    helpButton.style('color', 'black'); 
+    helpButton.style('border', 'none'); 
+    helpButton.style('border-radius', '10px'); 
+    helpButton.style('padding', '5px 10px'); 
+    helpButton.style('text-align', 'center'); 
+    helpButton.style('text-decoration', 'none'); 
+    helpButton.style('display', 'inline-block'); 
+    helpButton.style('font-size', '16px'); 
+    helpButton.mousePressed(toggleHelp);
 
     let umbrellaGap = 50;
     let totalGap = umbrellaGap * (umbrellaCount - 1);
@@ -78,7 +99,7 @@ function setup() {
         });
     });
 
-    generateRainDrop();
+    //generateRainDrop();
 }
 
 function updateRainIntensity(){
@@ -99,6 +120,29 @@ function manageRainDropsGeneration() {
 function draw() {
     updateRainIntensity();
     manageRainDropsGeneration(); 
+
+    if (showHelp) 
+    {
+        fill(255, 255, 255, 150); 
+        noStroke();
+        rect(helpBoxX, helpBoxY, helpBoxWidth, helpBoxHeight); 
+        
+        fill(0);  
+        textSize(14);
+        text( "When the rain intensity is at minimum:\n" +
+        "1. Try clicking different positions on the screen vertically\n" +
+        "2. Try clicking different positions on the screen horizontally\n" +
+        "3. Try releasing the mouse at different times\n" +
+        "4. Try clicking the umbrella head multiple times to set different colors\n" +
+        "5. Try clicking the umbrella handle\n\n" +
+        "Try to increase the rain intensity and then\n" +
+        "1. Try dragging the cloud to different positions\n" +
+        "2. Try adjusting the wind speed slider\n" +
+        "3. Try adjusting the rain frequency slider\n" +
+        "4. Try adjusting the rain intensity slider\n\n" +
+        "Finally, customize everything and create your own music!\n\n"+
+        "~~~🎵🎵🎵🎹☔️☔️☔️🥰🥰🥰🥰☔️☔️☔️🎹🎵🎵🎵~~~", helpBoxX+10, helpBoxY + 20);
+    }
 
     let windSpeed = cloudSpeedSlider.value();
     let disorderVolume;
@@ -180,24 +224,21 @@ function draw() {
     }
 }
 
+function toggleHelp() {
+    showHelp = !showHelp;
+  }
+
+function mouseInButton() {
+    if (mouseX >= helpButton.position().x && mouseX <= helpButton.position().x + helpButton.size().width &&
+        mouseY >= helpButton.position().y && mouseY <= helpButton.position().y + helpButton.size().height) 
+    { return true;}
+    return false;
+}
+
 function isMouseOverSlider() {
     return isMouseOverSpecificSlider(rainIntensitySlider) || isMouseOverSpecificSlider(rainFrequencySlider) || isMouseOverSpecificSlider(cloudSpeedSlider);
   }
   
-//   function isMouseOverSpecificSlider(slider) {
-//     let sliderX = slider.elt.offsetLeft;
-//     let sliderY = slider.elt.offsetTop;
-//     let sliderWidth = slider.elt.offsetWidth;
-//     let sliderHeight = slider.elt.offsetHeight;
-
-//     let mouseXInRange = mouseX >= sliderX && mouseX <= sliderX + sliderWidth;
-//     let mouseYInRange = mouseY >= sliderY && mouseY <= sliderY + sliderHeight;
-
-//     return mouseXInRange && mouseYInRange;
-// }
-
-
-
 function isMouseOverSpecificSlider(slider) {
         let sliderPos = slider.position();
         let sliderSize = slider.size();
@@ -263,7 +304,7 @@ function mousePressed() {
         umbrellaClicked.toggleColorAndRestitution();
     }
    
-    if (!umbrellaClicked && !clickedCloud && !clickedUmbrellaHandle && !isMouseOverSlider()) {
+    if (!umbrellaClicked && !clickedCloud && !clickedUmbrellaHandle && !isMouseOverSlider() && !mouseInButton()) {
         isGrowing = true;
         let size = 20;
         let rainDropOctave = Math.floor(map(mouseY, 0, windowHeight, 6, 3));
@@ -335,32 +376,32 @@ function generateRainDrop() {
     setTimeout(generateRainDrop, interval);
 }
 
-// function windowResized() {
-//     let newWidth = windowWidth;
-//     let newHeight = windowHeight;
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight); 
 
-//     if (newWidth !== width || newHeight !== height)
-//     {
-//         resizeCanvas(windowWidth, windowHeight);
-//         umbrellas = [];
-//         clouds = [];
-//         rainDrops = [];
-//         physics.clearBody();
-    
-//         let umbrellaGap = 50;
-//         let totalGap = umbrellaGap * (umbrellaCount - 1);
-//         let umbrellaWidth = (width - totalGap) / umbrellaCount;
-//         let umbrellaHeight = umbrellaWidth * 0.5;
-//         let noteIndices = [0, 2, 4, 5, 7, 9, 11];
-    
-//         for (let i = 0; i < umbrellaCount; i++) {
-//             let x = i * (umbrellaWidth + umbrellaGap) + umbrellaWidth / 2;
-//             let y = height - umbrellaHeight;
-//             let umbrella = new Umbrella(x, y, umbrellaWidth, umbrellaHeight, noteIndices[i], physics);
-//             umbrellas.push(umbrella);
+    helpButton.position(width - 60, 10);
 
-//             let cloud = new Cloud(x, 100); 
-//             clouds.push(cloud);
-//         }
-//     }
-// }
+    rainIntensitySlider.position(10, 10);
+    rainFrequencySlider.position(10 + rainIntensitySlider.width + 50, 10); 
+    cloudSpeedSlider.position(20 + rainIntensitySlider.width + rainFrequencySlider.width + 100, 10);
+
+    let umbrellaGap = 50;
+    let totalGap = umbrellaGap * (umbrellaCount - 1);
+    let umbrellaWidth = (width - totalGap) / umbrellaCount;
+    let umbrellaHeight = umbrellaWidth * 0.5;
+
+    umbrellas.forEach((umbrella, i) => {
+        let x = i * (umbrellaWidth + umbrellaGap) + umbrellaWidth / 2;
+        let y = height - umbrellaHeight;
+        umbrella.handleLength=umbrella.height/2;
+        umbrella.updatePosition(x,y); 
+    });
+
+    clouds.forEach((cloud, i) => {
+        let x = i * (umbrellaWidth + umbrellaGap) + umbrellaWidth / 2;
+        cloud.updatePosition(x, 100); 
+    });
+
+    helpBoxX = width - helpBoxWidth;
+    helpBoxY = 200;
+}
