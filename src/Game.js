@@ -83,7 +83,6 @@ function setup() {
         clouds.push(cloud);
     }
 
-    // 碰撞检测
     physics.onCollision((event) => {
         let pairs = event.pairs;
         pairs.forEach(pair => {
@@ -99,7 +98,6 @@ function setup() {
         });
     });
 
-    //generateRainDrop();
 }
 
 function updateRainIntensity(){
@@ -260,7 +258,6 @@ function mouseInCloud(px, py){
     return false;
 }
 
-//鼠标位于伞头
 function mouseInUmbrella(px, py){
     const mousePoint = { x: px, y: py };
     for (const umbrella of umbrellas) {
@@ -272,7 +269,6 @@ function mouseInUmbrella(px, py){
 
 }
 
-//判断鼠标是否在伞把上
 function mouseInUmbrellaHandle(px, py){
     for(let umbrella of umbrellas)
     {
