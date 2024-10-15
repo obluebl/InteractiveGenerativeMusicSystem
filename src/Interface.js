@@ -1,9 +1,24 @@
+/**
+ * Class representing the user interface of the sketch, including background effects.
+ */
 export class Interface{
+    /**
+     * Creates a new Interface object.
+     * 
+     * @param {object} p - The p5.js instance.
+     */
     constructor(p){
         this.p=p;
         this.palette = ["#d6ebff", "#90A8C3", "#A6E1FA", "#284B63", "#33658A"];
     }
 
+    /**
+     * Draws the dynamic background with rain effects based on the rain intensity.
+     * Adjusts the background color and rain effects according to the current rain intensity and base rain intensity.
+     * 
+     * @param {number} rainIntensity - The current rain intensity factor.
+     * @param {number} baseRainIntensity - The base rain intensity used as a reference for the calculations.
+     */
     drawBackgroundRain(rainIntensity, baseRainIntensity){
             this.p.colorMode(this.p.RGB);
             let bgStartColor = this.p.color(163, 208, 251); 

@@ -1,4 +1,12 @@
+/**
+ * Class representing the music system, responsible for handling sound effects such as piano notes, rain, wind, and seagulls.
+ */
 export class Music{
+    /**
+     * Creates a new Music object.
+     * 
+     * @param {object} p - The p5.js instance.
+     */
     constructor(p) {
         this.p = p;
         this.pianoNotes = [];
@@ -8,6 +16,10 @@ export class Music{
         this.seawindSound = null;
     }
 
+    /**
+     * Loads piano note sounds for each note in multiple octaves.
+     * It maps each piano note to its respective sound file and loads it into the `pianoNotes` array.
+     */
     loadPianoNotes() {
         const notes = [
             ['c1', 'c1#', 'd1', 'd1#', 'e1', 'f1', 'f1#', 'g1', 'g1#', 'a1', 'a1#', 'b1'],
@@ -34,6 +46,9 @@ export class Music{
         });
     }
 
+    /**
+     * Loads the sound for rain and loops it.
+     */
     loadRainSound() {
         let filepath = `../assets/sound/naturalSound/rain.mp3`;
         if (typeof this.p.loadSound === 'undefined') {
@@ -51,6 +66,9 @@ export class Music{
         });
     }
 
+    /**
+     * Loads the sound for seagulls.
+     */
     loadSeagullSound() {
         let filepath = `../assets/sound/naturalSound/seagull.wav`;
         this.seagullSound = this.p.loadSound(filepath, () => {
@@ -60,6 +78,9 @@ export class Music{
         });
     }
 
+    /**
+     * Loads the sound for wind.
+     */
     loadWindSound() {
         let filepath = `../assets/sound/naturalSound/wind.wav`;
         this.windSound = this.p.loadSound(filepath, () => {
@@ -70,6 +91,9 @@ export class Music{
         });
     }
 
+    /**
+     * Loads the sound for seawind.
+     */
     loadSeawindSound() {
         let filepath = `../assets/sound/naturalSound/seawind.mp3`;
         this.seawindSound = this.p.loadSound(filepath, () => {
@@ -79,8 +103,15 @@ export class Music{
         });
     }
 
+     /**
+     * Plays a specific piano note based on the given octave, note index, and volume.
+     * 
+     * @param {number} octave - The octave number (0 to 6) indicating the row in the `pianoNotes` array.
+     * @param {number} noteIndex - The index of the note within the octave (0 to 11).
+     * @param {number} volume - The volume at which to play the note.
+     */
     playPianoNote(octave, noteIndex, volume) {
-        console.log(`octave的值为${octave}`);
+        console.log(`octave:${octave}`);
         if (this.pianoNotes[octave] && this.pianoNotes[octave][noteIndex]) { 
             let sound = this.pianoNotes[octave][noteIndex];
             if (sound) {

@@ -1,4 +1,18 @@
+/**
+ * Class representing an umbrella in the sketch, which interacts with physics and can change its color and pitch.
+ */
 export class Umbrella{
+     /**
+     * Creates a new Umbrella object.
+     * 
+     * @param {object} p - The p5.js instance.
+     * @param {number} x - The x-coordinate of the umbrella.
+     * @param {number} y - The y-coordinate of the umbrella.
+     * @param {number} width - The width of the umbrella.
+     * @param {number} height - The height of the umbrella.
+     * @param {number} noteIndex - The musical note index associated with the umbrella.
+     * @param {object} physics - The physics engine used to manage the umbrella's body in the physics world.
+     */
     constructor(p, x, y, width, height, noteIndex, physics){
         this.p = p;
         this.x = x;
@@ -28,6 +42,9 @@ export class Umbrella{
         this.physics.addBody(this.body);
     }
 
+    /**
+     * Draws the umbrella on the canvas, including its handle and canopy.
+     */
     draw(){
         this.p.stroke(this.handleColor);
         this.p.strokeWeight(10);
@@ -43,14 +60,28 @@ export class Umbrella{
 
     }
 
+    /**
+     * Sets the color of the umbrella's canopy.
+     * 
+     * @param {string} newColor - The new color to apply to the umbrella's canopy.
+     */
     setColor(newColor) {
         this.color = newColor;
     }
 
+    /**
+     * Sets the restitution (bounciness) of the umbrella's body.
+     * 
+     * @param {number} newRestitution - The new restitution value.
+     */
     setRestitution(newRestitution) {
         Matter.Body.set(this.body, { restitution: newRestitution });
     }
 
+    /**
+     * Toggles the color and restitution of the umbrella in a sequence.
+     * The umbrella changes through a set of predefined colors and corresponding restitution values.
+     */
     toggleColorAndRestitution() {
         if (this.color === '#FBF188') {  
             this.setColor('#FAD26B');  
@@ -67,6 +98,12 @@ export class Umbrella{
         }
     }
 
+    /**
+     * Updates the position of the umbrella in the physics world.
+     * 
+     * @param {number} newX - The new x-coordinate of the umbrella.
+     * @param {number} newY - The new y-coordinate of the umbrella.
+     */
     updatePosition(newX, newY)
     {
         this.x=newX;
@@ -74,12 +111,22 @@ export class Umbrella{
         this.physics.updatePosition(this.body, newX, newY);
     }
 
+    /**
+     * Updates the size (width and height) of the umbrella.
+     * 
+     * @param {number} width - The new width of the umbrella.
+     * @param {number} height - The new height of the umbrella.
+     */
     updateSize(width, height)
     {
         this.width = width;
         this.height = height;
     }
 
+    /**
+     * Adjusts the pitch (semitone) of the umbrella's associated musical note.
+     * Handles pitch adjustments based on the umbrella's note index and modifies its handle color and position.
+     */
     adjustSemitone()
     {
         if(this.noteIndex==0 || this.noteIndex==5)

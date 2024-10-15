@@ -1,4 +1,13 @@
+/**
+ * Class representing a cloud in the sketch.
+ */
 export class Cloud {
+    /**
+     * Creates a new Cloud object.
+     * @param {object} p - The p5.js instance.
+     * @param {number} x - The initial x-coordinate of the cloud.
+     * @param {number} y - The initial y-coordinate of the cloud.
+     */
     constructor(p, x, y) {
         this.p = p;
         this.x = x;
@@ -11,6 +20,10 @@ export class Cloud {
         this.updateColor();
     }
 
+    /**
+     * Displays the cloud on the canvas.
+     * Draws the cloud using a series of ellipses based on the cloud's ellipses array.
+     */
     display() {
         this.p.noStroke();
         this.p.fill(this.color);
@@ -20,6 +33,12 @@ export class Cloud {
 
     }
 
+    /**
+     * Checks whether a point (px, py) is within the cloud's ellipses.
+     * @param {number} px - The x-coordinate of the point to check.
+     * @param {number} py - The y-coordinate of the point to check.
+     * @returns {boolean} Returns true if the point is within one of the ellipses, otherwise false.
+     */
     containsPoint(px, py){
         let isContained = this.ellipses.some(function(ellipseData){
             let dx = (px-ellipseData.cx)/ellipseData.rx;
@@ -29,6 +48,12 @@ export class Cloud {
         return isContained;
     }
 
+    /**
+     * Updates the position of the cloud to a new (x, y) position.
+     * Adjusts the cloud's ellipses based on the new position and ensures the cloud stays within the canvas bounds.
+     * @param {number} x - The new x-coordinate of the cloud.
+     * @param {number} y - The new y-coordinate of the cloud.
+     */
     updatePosition(x, y) {
         this.x = x;
         if(this.x - this.ellipses[0].rx > this.p.width) { 
@@ -45,6 +70,10 @@ export class Cloud {
         ];
     }
 
+    /**
+     * Updates the color of the cloud based on its vertical position on the canvas.
+     * The cloud changes color as it moves higher or lower on the screen.
+     */
     updateColor() {
         if (this.y < this.p.height / 3) {
             this.color='#FFFFFC';
@@ -53,6 +82,5 @@ export class Cloud {
         } else {
             this.color='#FAF5DD';
         }
-    }
-    
+    }  
 }
