@@ -1,5 +1,6 @@
-class Music{
-    constructor() {
+export class Music{
+    constructor(p) {
+        this.p = p;
         this.pianoNotes = [];
         this.rainSound = [];
         this.windSound = null;
@@ -19,7 +20,7 @@ class Music{
         ];
 
         this.pianoNotes = new Array(notes.length).fill().map(() => new Array(12));
-        if (typeof loadSound === 'undefined') {
+        if (typeof this.p.loadSound === 'undefined') {
             console.error('loadSound is not defined.');
         } else {
             console.log('loadSound is ready to use.');
@@ -28,20 +29,20 @@ class Music{
             octave.forEach((note, j) => {
                 let encodedNote = encodeURIComponent(note);
                 let filepath = `../assets/sound/piano/88-piano/${encodedNote}.ogg`;
-                this.pianoNotes[i][j] = loadSound(filepath);
+                this.pianoNotes[i][j] = this.p.loadSound(filepath);
             });
         });
     }
 
     loadRainSound() {
         let filepath = `../assets/sound/naturalSound/rain.mp3`;
-        if (typeof loadSound === 'undefined') {
+        if (typeof this.p.loadSound === 'undefined') {
             console.error('loadSound is not defined.');
         } else {
             console.log('loadSound is ready to use.');
         }
         
-        this.rainSound = loadSound(filepath, () => {
+        this.rainSound = this.p.loadSound(filepath, () => {
             console.log("natural rain sound loaded");
             this.rainSound.setVolume(0.5); 
             this.rainSound.loop(); 
@@ -52,7 +53,7 @@ class Music{
 
     loadSeagullSound() {
         let filepath = `../assets/sound/naturalSound/seagull.wav`;
-        this.seagullSound = loadSound(filepath, () => {
+        this.seagullSound = this.p.loadSound(filepath, () => {
             console.log("sea gull sound loaded");
         }, (err) => {
             console.error("Error loading seagull sound");
@@ -61,7 +62,7 @@ class Music{
 
     loadWindSound() {
         let filepath = `../assets/sound/naturalSound/wind.wav`;
-        this.windSound = loadSound(filepath, () => {
+        this.windSound = this.p.loadSound(filepath, () => {
             console.log("natural wind sound loaded");
             this.windSound.setVolume(0.4); 
         }, (err) => {
@@ -71,7 +72,7 @@ class Music{
 
     loadSeawindSound() {
         let filepath = `../assets/sound/naturalSound/seawind.mp3`;
-        this.seawindSound = loadSound(filepath, () => {
+        this.seawindSound = this.p.loadSound(filepath, () => {
             console.log("seawind sound loaded");
         }, (err) => {
             console.error("Error loading seagull sound");
@@ -89,5 +90,3 @@ class Music{
         }
     } 
 }
-
-window.Music = Music;

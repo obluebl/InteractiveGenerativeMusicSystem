@@ -1,5 +1,6 @@
-class Cloud {
-    constructor(x, y) {
+export class Cloud {
+    constructor(p, x, y) {
+        this.p = p;
         this.x = x;
         this.y = y;
         this.ellipses=[
@@ -11,10 +12,10 @@ class Cloud {
     }
 
     display() {
-        noStroke();
-        fill(this.color);
-        this.ellipses.forEach(function(ellipseData){
-            ellipse(ellipseData.cx, ellipseData.cy, ellipseData.rx*2, ellipseData.ry*2);
+        this.p.noStroke();
+        this.p.fill(this.color);
+        this.ellipses.forEach((ellipseData)=>{
+            this.p.ellipse(ellipseData.cx, ellipseData.cy, ellipseData.rx*2, ellipseData.ry*2);
         })
 
     }
@@ -30,11 +31,11 @@ class Cloud {
 
     updatePosition(x, y) {
         this.x = x;
-        if(this.x - this.ellipses[0].rx > width) { 
+        if(this.x - this.ellipses[0].rx > this.p.width) { 
             this.x = this.ellipses[0].rx; 
         }
         if(this.x+50 + this.ellipses[2].rx <0 ) { 
-            this.x = width - this.ellipses[2].rx - 50; 
+            this.x = this.p.width - this.ellipses[2].rx - 50; 
         }
         this.y = y;
         this.ellipses = [
@@ -45,7 +46,7 @@ class Cloud {
     }
 
     updateColor() {
-        if (this.y < height / 3) {
+        if (this.y < this.p.height / 3) {
             this.color='#FFFFFC';
         } else if (this.y < 2 * height / 3) {
             this.color='#F7F6ED';
@@ -55,5 +56,3 @@ class Cloud {
     }
     
 }
-
-window.Cloud = Cloud;

@@ -1,5 +1,6 @@
-class Physics{
-    constructor(){
+export class Physics{
+    constructor(p){
+        this.p=p;
         this.engine = Matter.Engine.create();
         this.world=this.engine.world;
         Matter.Engine.run(this.engine);
@@ -21,8 +22,5 @@ class Physics{
     clearBody()
     {
         Matter.World.clear(this.world, false);
-    }
-    
+    } 
 }
-
-window.Physics = Physics;

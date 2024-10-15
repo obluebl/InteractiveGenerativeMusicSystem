@@ -1,5 +1,6 @@
-class Umbrella{
-    constructor(x,y, width, height, noteIndex, physics){
+export class Umbrella{
+    constructor(p, x, y, width, height, noteIndex, physics){
+        this.p = p;
         this.x = x;
         this.y = y;
         this.width = width;
@@ -28,13 +29,13 @@ class Umbrella{
     }
 
     draw(){
-        stroke(this.handleColor);
-        strokeWeight(10);
-        line(this.x, this.y+this.height/2, this.x, this.y + +this.height/2+this.handleLength );
+        this.p.stroke(this.handleColor);
+        this.p.strokeWeight(10);
+        this.p.line(this.x, this.y+this.height/2, this.x, this.y + +this.height/2+this.handleLength );
 
-        fill(this.color); 
-        noStroke();
-        triangle(
+        this.p.fill(this.color); 
+        this.p.noStroke();
+        this.p.triangle(
             this.x - this.width / 2, this.y+this.height/2,
             this.x + this.width / 2, this.y+this.height/2,
             this.x, this.y-this.height/2
@@ -142,5 +143,3 @@ class Umbrella{
         }
     }
 }
-
-window.Umbrella = Umbrella;
