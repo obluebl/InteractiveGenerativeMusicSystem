@@ -36,24 +36,20 @@ const sketch = (p) =>{
     let helpButton;
     let showHelp = false;  
     let helpBoxX, helpBoxY, helpBoxWidth, helpBoxHeight;
-
-    /**
-     * Preload function to load sound assets before the sketch starts.
-     */
-    p.preload = () => {
-        music.loadPianoNotes();
-        music.loadRainSound();
-        music.loadWindSound();
-        music.loadSeagullSound();
-        music.loadSeawindSound();
-    }
-    
+  
     /**
      * Setup function that runs once at the start to initialize the canvas, UI elements, and other components.
      */
     p.setup = () => {
         p.createCanvas(p.windowWidth, p.windowHeight);
         p.noStroke();
+
+        //Asynchronously loads audio without blocking page rendering
+        music.loadPianoNotes();
+        music.loadRainSound();
+        music.loadWindSound();
+        music.loadSeagullSound();
+        music.loadSeawindSound();
     
         rainIntensitySlider = p.createSlider(0.5, 2, 0.5, 0.1); 
         rainFrequencySlider = p.createSlider(100, 1800, 900, 100); 
@@ -150,8 +146,7 @@ const sketch = (p) =>{
         updateRainIntensity();
         manageRainDropsGeneration(); 
     
-        if (showHelp) 
-        {
+        if (showHelp) {
             p.fill(255, 255, 255, 150); 
             p.noStroke();
             p.rect(helpBoxX, helpBoxY, helpBoxWidth, helpBoxHeight); 
@@ -175,25 +170,23 @@ const sketch = (p) =>{
     
         let windSpeed = cloudSpeedSlider.value();
         let disorderVolume;
-        if(baseRainIntensity==0.5)
-        {
+        if(baseRainIntensity==0.5) {
             disorderVolume=0;
-            if(!music.seagullSound.isPlaying())
-            {
+            if(music.seagullSound.isLoaded() && !music.seagullSound.isPlaying()) {
                 music.seagullSound.loop();
                 music.seagullSound.setVolume(0);
                 music.seagullSound.fade(1,2000);
             }
-        }
-        else
-        {
+        } else {
             disorderVolume = p.map(rainIntensity, 0.5*baseRainIntensity, 2*baseRainIntensity, 0.10, 1, true);
-            if(music.seagullSound.isPlaying())
-            {
+            if(music.seagullSound.isLoaded() && music.seagullSound.isPlaying()) {
                 music.seagullSound.pause();
             }
         }
-        music.rainSound.setVolume(disorderVolume);
+
+        if(music.rainSound.isLoaded()) {
+            music.rainSound.setVolume(disorderVolume);
+        }
     
         gameInterface.drawBackgroundRain(rainIntensity, baseRainIntensity);
     
@@ -206,25 +199,19 @@ const sketch = (p) =>{
         });
     
         clouds.forEach(cloud => {
-            if (windSpeed!=0) 
-            {
+            if (windSpeed!=0) {
                 cloud.updatePosition(cloud.x+windSpeed, cloud.y); 
-                if(baseRainIntensity==0.5 && !music.seawindSound.isPlaying())
-                {
-                    if(music.windSound.isPlaying())
-                    {
+                if(baseRainIntensity==0.5 && music.seawindSound.isLoaded() && !music.seawindSound.isPlaying()) {
+                    if(music.windSound.isLoaded() && music.windSound.isPlaying()) {
                         music.windSound.pause();
                     }
                     music.seawindSound.loop();
                     let seawindVolume = p.map(Math.abs(windSpeed), 0, 2, 0.3, 1);
                     music.seawindSound.setVolume(seawindVolume);
-    
                 }
     
-                if(baseRainIntensity!=0.5 && !music.windSound.isPlaying())
-                {
-                    if(music.seawindSound.isPlaying())
-                    {
+                if(baseRainIntensity!=0.5 && music.windSound.isLoaded() && !music.windSound.isPlaying()) {
+                    if(music.windSound.isLoaded() && music.seawindSound.isPlaying()) {
                         music.seawindSound.pause();
                     }
                     music.windSound.loop();
@@ -232,14 +219,11 @@ const sketch = (p) =>{
                     music.windSound.setVolume(windVolume);
                 }
             }
-            if(windSpeed ===0)
-            {
-                if(music.seawindSound.isPlaying())
-                {
+            if(windSpeed ===0) {
+                if(music.seawindSound.isLoaded() && music.seawindSound.isPlaying()) {
                     music.seawindSound.pause();
                 }
-                if(music.windSound.isPlaying())
-                {
+                if(music.windSound.isLoaded() && music.windSound.isPlaying()) {
                     music.windSound.pause();
                 }
             }
@@ -303,10 +287,8 @@ const sketch = (p) =>{
      * @returns {Cloud|false} Returns the cloud object being dragged or false if no cloud is selected.
      */
     const mouseInCloud = (px, py) => {
-        for(let i=0; i<clouds.length; i++)
-        {
-            if(clouds[i].containsPoint(px, py))
-            {
+        for(let i=0; i<clouds.length; i++) {
+            if(clouds[i].containsPoint(px, py)) {
                 cloudOffsetX= px-clouds[i].x;
                 cloudOffsetY= py-clouds[i].y;
                 return clouds[i];
@@ -341,10 +323,8 @@ const sketch = (p) =>{
      * @returns {Umbrella|false} Returns the umbrella object if the mouse is over the handle, or false if not.
      */
     const mouseInUmbrellaHandle = (px, py) =>{
-        for(let umbrella of umbrellas)
-        {
-            if(px >= umbrella.x-5 && px <= umbrella.x+5 && py >= umbrella.y+umbrella.height/2 && py <= umbrella.y+umbrella.height/2+umbrella.handleLength)
-            {
+        for(let umbrella of umbrellas) {
+            if(px >= umbrella.x-5 && px <= umbrella.x+5 && py >= umbrella.y+umbrella.height/2 && py <= umbrella.y+umbrella.height/2+umbrella.handleLength) {
                 return umbrella;
             }
         }
@@ -357,20 +337,17 @@ const sketch = (p) =>{
      */
     p.mousePressed = () => {
         let clickedCloud = mouseInCloud(p.mouseX, p.mouseY);
-        if(clickedCloud)
-        {
+        if(clickedCloud) {
             cloudDragged=clickedCloud;
         }
     
         let clickedUmbrellaHandle = mouseInUmbrellaHandle(p.mouseX, p.mouseY);
-        if(clickedUmbrellaHandle)
-        {
+        if(clickedUmbrellaHandle) {
             clickedUmbrellaHandle. adjustSemitone();
         }
     
         umbrellaClicked = mouseInUmbrella(p.mouseX, p.mouseY);
-        if(umbrellaClicked)
-        {
+        if(umbrellaClicked) {
             umbrellaClicked.toggleColorAndRestitution();
         }
        
@@ -381,9 +358,7 @@ const sketch = (p) =>{
             currentDrop = new RainDrop(p, p.mouseX, p.mouseY, size, '#A7FFFF', rainDropOctave);
             rainDrops.push(currentDrop);
             startTime = p.millis();
-        } 
-        else 
-        {
+        } else {
             currentDrop = null;
         }
     }
@@ -392,8 +367,7 @@ const sketch = (p) =>{
      * Handles mouse drag events to move clouds.
      */
     p.mouseDragged = () =>{
-        if(cloudDragged)
-        {
+        if(cloudDragged) {
             let cloud = cloudDragged;
             cloud.updatePosition(p.mouseX-cloudOffsetX, p.mouseY-cloudOffsetY);
             cloud.updateColor();
@@ -408,8 +382,7 @@ const sketch = (p) =>{
     p.mouseReleased = () => {
         console.log(currentDrop);
     
-        if (currentDrop) 
-        { 
+        if (currentDrop) { 
             isGrowing = false;
             let timeElapsed = p.millis() - startTime;
             let finalSize = p.constrain(p.map(timeElapsed, 0, 1000, 20, 80), 20, 40);  
@@ -462,23 +435,19 @@ const sketch = (p) =>{
     p.windowResized = () => {
         p.resizeCanvas(p.windowWidth, p.windowHeight); 
     
-        if(helpButton)
-        {
+        if(helpButton) {
             helpButton.position(p.width - 60, 10);
         }
     
-        if(rainFrequencySlider)
-        {
+        if(rainFrequencySlider) {
             rainIntensitySlider.position(10, 10);
         }
 
-        if(rainFrequencySlider)
-        {
+        if(rainFrequencySlider) {
             rainFrequencySlider.position(10 + rainIntensitySlider.width + 50, 10); 
         }
 
-        if(cloudSpeedSlider)
-        {
+        if(cloudSpeedSlider) {
             cloudSpeedSlider.position(20 + rainIntensitySlider.width + rainFrequencySlider.width + 100, 10);
         }
         

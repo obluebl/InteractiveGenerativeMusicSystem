@@ -77,7 +77,7 @@ export class Cloud {
     updateColor() {
         if (this.y < this.p.height / 3) {
             this.color='#FFFFFC';
-        } else if (this.y < 2 * height / 3) {
+        } else if (this.y < 2 * this.p.height / 3) {
             this.color='#F7F6ED';
         } else {
             this.color='#FAF5DD';

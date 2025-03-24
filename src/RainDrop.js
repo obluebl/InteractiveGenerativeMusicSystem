@@ -57,6 +57,7 @@ export class RainDrop{
      */
     draw() {
         if (this.body) {
+            //console.log(this.body.position);
             let pos = this.body.position;
             this.p.push();
             this.p.translate(pos.x, pos.y);

@@ -24,12 +24,9 @@ export class Interface{
             let bgStartColor = this.p.color(163, 208, 251); 
             let bgEndColor = this.p.color(50, 50, 50); 
 
-            if(baseRainIntensity==0.5)
-            {
+            if(baseRainIntensity==0.5) {
                 this.p.background(this.p.red(bgStartColor), this.p.green(bgStartColor), this.p.blue(bgStartColor), 50);
-            }
-            else
-            {
+            } else {
                 let amt = this.p.map(rainIntensity, 0.5*baseRainIntensity, 2*baseRainIntensity, 0, 1);
                 let bgColor = this.p.lerpColor(bgStartColor, bgEndColor, amt);
                 this.p.background(this.p.red(bgColor), this.p.green(bgColor), this.p.blue(bgColor), 50);
