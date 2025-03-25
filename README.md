@@ -1,5 +1,5 @@
 # Interactive generative music system
-## Intrduction
+## Introduction
 Inspired by rainy days in the UK, this project is a new media project that integrates generative music, games and interactions. It can be used for music teaching, relaxation and meditation.
 
 ## Visit
